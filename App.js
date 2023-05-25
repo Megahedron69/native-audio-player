@@ -89,6 +89,7 @@ export default function App() {
       console.log("error is " + e);
     }
   };
+
   const playSound = async () => {
     try {
       await Audio.setAudioModeAsync({
@@ -100,15 +101,9 @@ export default function App() {
       });
       loadAudio();
       setisLoaded(true);
-      console.log("I have loaded");
-      onPlaybackStatusUpdate();
     } catch (e) {
       console.log("error" + " " + e);
     }
-    onPlaybackStatusUpdate = (status) => {
-      setisPlaying(status.isPlaying);
-      setisBuffering(status.isBuffering);
-    };
   };
   //Pause,Resume,loadingprevious and next track functions
   const handlePause = async () => {
@@ -144,6 +139,7 @@ export default function App() {
   const loadNextTrack = async () => {
     try {
       if (sound) {
+        await sound.stopAsync();
         await sound.unloadAsync();
         setSound(null);
         audState.currentIndex < audioBookPlaylist.length - 1
@@ -154,6 +150,7 @@ export default function App() {
         });
       }
       await loadAudio();
+      await sound.playAsync();
     } catch (e) {
       console.log(e);
     }
